@@ -1,0 +1,154 @@
+\documentclass{llncs}
+%
+\author{Leslie Stovall, Dainius Jocas}
+\institute{Free University of Bozen-Bolzano}
+\title{Automated Soundtrack Recommendation for Video Commercials}
+\begin{document}
+  
+% Structure of the report
+%1. Abstract
+%2. Introduction: Description of the selected application problem and tech issues that you have tackled
+%3. Related Work: survey relevant information search applications and techniques (read and quote at least 3-4 specific papers including those recommended)
+%    - %Critical evaluation/comparison of the pros and cons of the techniques presented in the papers and in the course with respect to the selected problem
+%4. System Description: description of the proposed system functions and GUI design
+%5. Technologies: description of the core techniques (to be) used in the prototype and how they must be applied
+%6. Evaluation Strategy: Describe how you will evaluate the system/techniques
+%7. Conclusion and future work
+
+
+%% TODO: cite both articles
+%% No cold start problem in this task
+%% model should be investigated not the thing that is written now
+%%  
+%%
+\maketitle
+%% There is the details of our task:
+%% http://www.multimediaeval.org/mediaeval2013/soundtrack2013/index.html
+%% There we have the music set:
+%% http://www.cp.jku.at/musiclef/s
+
+
+%% todo: paper about images and music
+
+  
+\begin{abstract}
+We have chosen the MusiClef Task from the mediaEval Benchmark. For this task we consider a particular kind of context-aware recommendation task -- given a TV commercial, predict the most suitable music track from a list of candidate songs. To address this problem we use context extracted from social tags on music (gathered from Last.fm and other online services), information from web pages describing the brand/product, image features (album covers, brand logo, advertised product, ...), and social tags on commercial (gathered from YouTube). Due to the intrinsic difficulty and multi-modality of the task, evaluation of the matching between a recommended song for the commercial involves users.
+\end{abstract}
+
+%\begin{abstract}
+%The given task involves analyzing music usage in TV commercials. This context-aware recommendation task asks us to predict the most suitable music track from a given list of candidate songs for a particular commercial. The data used encompasses context and content extracted from social tags on music (gathered from Last.fm and other online services), information from web pages describing the brand/product, image features (album covers, brand logo, advertised product, ...), and social	 tags on commercial (gathered from YouTube). Due to the intrinsic difficulty and multi-modality of the task, evaluation of the matching between a recommended song for the commercial involves users.
+%\end{abstract}
+  
+\section{Introduction}
+\label{introduction}
+
+There in no single video commercial for which soundtrack is not important. The absence of the sound during a commercial does not necessarily mean that your audio system crashed or producers forgot to put the music in. If there are no sound during the commercial, probably, it is because producers carefully searched for a proper song, none of the candidates matched the requirements, and the risky decision to omit the soundtrack was taken. In other words, music selection for video commercials is an important and difficult task.
+
+What makes a selection of a music track for commercials so difficult? The answer lies in the very essence of the commercial. The main goal of the commercial is to guide the decisions-making process of people\cite{reynolds2001understanding}, e.g. to buy a BMW, to visit a concert of Madonna, to stop smoking, etc. Moreover, social psychologists and neuroscientists noticed and there is a relation between emotional state of a person and his decision-making process\cite{schwarz2000emotion, bechara2004role}. This means that the producers of commercial have to persuade people to do one activity over all others. To be persuasive, besides all other aspects, means to address the current emotional state of a particular person. With all the effort of researchers made in the field taken into account, there is still no strict taxonomy of the emotions \cite{cowie2001emotion}. Therefore, to produce a commercial is something as hard as doing art. But art, and more particular, music, is here to help. Music is known, starting from Plato's Republic, for its abilities to transmit emotions. So, to make a commercial more persuasive producers can put a music in the background. The problem here is to find a song which propagates desired emotions.
+
+How to select music track for a commercial? Basically, here are two ways how to get the music: to create unique or to pick an existing music track. In this work we consider the latter approach. This approach puts most of the pressure of producing a successful commercial, and therefore, of picking up a proper music track for a commercial on the shoulders of the producer. His knowledge, taste, and intuition here matters most. In the presence of music recommendation systems (MRS)\cite{typke2005survey}, part of this pressure can be transferred to those smart systems. For this task it seems that context-aware MRS can do the job. By definition, context-aware music recommender systems (MRS) are capable of suggesting music items taking into consideration contextual conditions\cite{adomavicius2011context}. Of course, MRS can't do all the job, but they can help a lot to support a selection process.
+
+%% Soundtrack of the commercial is important not only to the producer but, also, for the to audience. It is mainly because no one wants to watch a commercial with loud rock music in the break of their romantic movie or between two videos of classical music on Youtube.com. Therefore, selection of a soundtrack for a video commercial has to take into consideration context of an audience. This makes the task even more difficult.
+
+We have chosen the MusiClef Task from the mediaEval Benchmark 2013 \footnote{\url{http://www.multimediaeval.org/mediaeval2013/soundtrack2013/index.html}} \cite{website:mediaeval}. The given task involves analysing music usage in TV commercials. This context-aware recommendation task asks us to predict the most suitable music track from a given list of candidate songs for a particular commercial. To complete this task we are going to build a classifier which matches a song from list of songs to a given commercial.
+
+For the investigation purposes we use commercials listed in "ADmusicDB"\cite{website:admusicdb} and "SOUNDS FAMILIAR"\cite{website:sounds_familiar} online databases. The list of song are taken from MusiClef 2012 competition\footnote{\url{http://www.cp.jku.at/musiclef/}}\cite{schedl_etal:mmsys:2013}. 
+
+The song that we want to recommend can be described using various features ranging from low-level audio features (timbre, rhythm, ...) to micro-blogs on brand/product/artist/song. In this work we are not going to work with low level music features. Instead, we consider only the contextual information. By definition, context can be considered as any information that influences the interaction of the user with the system\cite{kaminskas2012contextual}. As a context, we consider:
+\begin{itemize}
+  \item social tags on music (gathered from Last.fm);
+  \item web pages describing the brand/product;
+  \item images feature (album covers, brand logo, advertised product, ...);
+  \item social tags on commercial (gathered from YouTube).
+\end{itemize}
+
+Due to the intrinsic difficulty and multi-modality of the task, evaluation of the sountrack recommendation for a commercial must involve users. Possible evaluation criteria may include following aspects:
+\begin{itemize}
+  \item How likely are you to buy this product?
+  \item Does the music relate to the video?
+  \item Does the music fit the user's perception of the product and the company?
+\end{itemize}	
+
+The rest of the paper is structured as following. In section \ref{related_work} we review the related work. Section TODO(dainius).
+
+%% application: same commercial - different sound tracks.
+
+%% Most of video commercials on TV and internet has its sound track. Therefore, to find a proper soundtrack producers of commercials have to take into account huge number of properties, e.g. of the advertised product, information about the producers, target audience, etc. Basically, here are two ways how to get music for a commercial: to create unique or take an existing music track. In this work we consider the latter.
+
+%% By definition, context-aware music recommender systems (MRS) are capable of suggesting music items taking into consideration contextual conditions. In the case of selecting a song for the commercial from the per context might be an information about the advertised product or its brand,   In this work we investigate the possibility of assigning a job of finding a matching music track for a commercial for a MIR system.
+
+
+\section{Related Work}
+\label{related_work}
+
+\subsection{Music recommendation systems}
+\label{music_recomendation_systems}
+
+Recommender systems are software tools and techniques providing suggestions of the items to be of use to a user\cite{ricci2011recommender}. In the music domain, recommender systems can support information search and discovery tasks by helping the user to find relevant music items, for instance, new music tracks, or discover new artists\cite{celma2011if}. Music recommender systems can be classified into:
+\begin{itemize}
+	\item content-based -- to recommend a song system uses features of music tracks liked by the listener. The idea is to recommend similar songs. Features can be extracted using signal processing techniques, or can be based on metadata (e.g. genre, year, author).
+	\item collaborative-based -- systems don't use features of songs, instead system uses user generated evaluations (ratings, implicit feedback, etc). The idea is that similar users like similar music, and vice-versa —- similar items are liked by similar users.
+	\item social-based -- system computes similarities among items to be recommended using we mining techniques, or by exploring social-taging information. The idea of this approach is that items similar to those that the user liked will also probably be relevant to the user. 
+\end{itemize}
+
+\subsection{Cross-domain item-to-item similarity}
+\label{cross_domain_similarity}
+
+
+\subsection{Music recomendations for POI}
+\label{ricci_kaminskass}
+%
+%A. Stupar and S. Michel look at the issue of assigning appropriate music to a picture. They use samples from movies of screenshots and the associated soundtrack to train their algorithm. The algorithm then ranks the most similar screenshots to the given query image and selects songs for each screenshot. A Top-K aggregation algorithm is then used to find the overall best suitable songs for the image.
+%
+%\subsection{Social Tagging}
+%\label{social_taging}
+%
+%Social tagging, also known as collaborative tagging, was defined by Golder and Huberman\cite{golder2006usage} as “the process by which many users add metadata in the form of keywords to shared content”. 
+%
+%In the field of Music Information Retrieval, Lamere\cite{lamere2008social} gave an overview of the social tagging phenomena in the context of music-related applications. The author analysed the distribution of tags in the largest music tagging community – Last.fm –, discussed the motivations for social tagging, the different types of tagging systems, and the application of tags in MIR. The author argued that tags may become the key solution to many hard MIR problems like genre or mood detection, music discovery, and recommendation. Furthermore, Lamere identified the main problems that need to be solved before tags can be effectively used in MIR tasks: the presence of noise in tag data, lack of tags for new and unpopular items, and the vulnerability of the tagging systems to malicious users.
+%
+%Tags are merely unstructured labels that are assigned to a resource. Usually tags are one or several words that describe the resource. Typically tags are assigned by non-expert users for their own use, such as assisting future retrieval.
+%
+%Turnbull
+%et al. [120] analyzed different ways to obtain tags for music.
+%The authors identified five approaches: conducting surveys,
+%harvesting social tags, deploying tagging games, mining web
+%documents, and automatically tagging audio content. In this work we use harvesting social tags approach. 
+%
+%Harvesting social tags. Social tags are accumulated in community websites that support the tagging of their content. For instance, Last.fm allows its users to freely tag tracks, artists, albums, and record labels.
+%
+%The major challenge faced when harvesting social tags
+%is having the access to a sufficiently large online user
+%community.
+%
+%A major problem of social tagging communities is the so-
+%called “popularity bias” [120]: artists and songs that are most
+%popular among the tagging users receive the majority of tags.
+%
+%A related problem is the “tagger bias” [119]: the harvested tags
+%reflect the opi\textsc{•}nion of a typical “tagger” – a user who devotes
+%his time to tagging –, which is not necessarily the opinion of
+%the whole music lovers’ community.
+%
+%\subsection{Images Feature}
+%\label{Images Feature}
+%
+%The images feature can be used to compare album covers and/or still-shots from music videos to pictures of the product and/or still-shots from the commercial. One option, which is used by A. Stupar and S. Michel, is to use MPEG-7 color and texture low-level features to compute image-to-image similarity. This allows a "global" focus of the images to be used.
+%
+%\subsection{Commercial Social Tags}
+%\label{Commercial Social Tags}
+%
+%There are different approaches that can be taken for comparisons of commercial social tags. The first, and obvious, approach is to compare social tags from commercials to social tags from songs. These tags, retrieved from YouTube and Last.fm respectively, can be compared and matched by their semantic relatedness.
+%Another approach would be to rank other commercials which have similar tags to those of the given commercial. By evaluating the songs used in the other commercials, our algorithm could then derive an appropriate song.
+%
+%\subsection{Evaluation}
+%\label{Evaluation}
+%
+%
+%Evaluation of the appropriateness of the matchings of songs to commercials should incorporate the involvement of the users via crowdsourcing. It may also be useful to compare the recommended music retrieved by our algorithm to the musically originally used for the commercial.
+
+
+\bibliography{literature.bib}
+\bibliographystyle{splncs}
+
+\end{document}
